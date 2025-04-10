@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Price Prediction</title>
+  <style>
+    body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #fdfbfb, #ebedee);
+  color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.main-header {
+  width: 95%;
+  padding: 20px 40px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-section img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.logo-section h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #000000;
+}
+
+.nav-links a {
+  margin-left: 10px;
+  margin-right: 30px;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+  color: #000000;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #ff7b00;
+}
+
+/* Main container */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 90%;
+  max-width: 1200px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  margin: 40px auto;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Left panel */
+.left-panel {
+  flex: 1;
+  padding: 60px;
+}
+
+.left-panel h1 {
+  font-size: 42px;
+  margin-bottom: 20px;
+}
+
+.left-panel p {
+  font-size: 18px;
+  color: #333333;
+  margin-bottom: 30px;
+}
+
+#predictBtn {
+  padding: 12px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+#predictBtn:hover {
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  transform: translateY(-2px);
+}
+
+/* Right Form */
+.right-form {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.5s ease;
+}
+
+.right-form.active {
+  width: 400px;
+  opacity: 1;
+}
+
+.right-form h2 {
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin-top: 10px;
+  color: #000000;
+  font-weight: 500;
+}
+
+form input,
+form select {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #000000;
+  outline: none;
+}
+
+form button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #28a745;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background: #218838;
+}
+
+.prediction-result {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-left: 5px solid #4a90e2;
+  font-size: 18px;
+  color: #000000;
+  display: none;
+  border-radius: 10px;
+}
+
+.prediction-result.show {
+  display: block;
+}
+
+/* Hero Slider */
+.hero-slider {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  overflow: hidden;
+  border-radius: 0 20px 20px 0;
+}
+
+.hero-slider .slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-slider .slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .right-form.active {
+    width: 100%;
+  }
+
+  .hero-slider {
+    height: 300px;
+  }
+
+  .left-panel {
+    padding: 40px 20px;
+  }
+}
+
+.right-form {
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: none;
+  transition: all 0.3s ease;
+}
+
+.right-form.show {
+  display: block;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.info-section {
+  padding: 80px 60px;
+  max-width: 1000px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  margin-top: 60px;
+  color: #000000;
+}
+
+.info-section h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.info-section p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333333;
+}
+
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo-section">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Car Wala Logo">
+      <h1>Car Wala</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="{{url_for('home')}}">
+
+<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M18 2.75C17.5858 2.75 17.25 2.41421 17.25 2C17.25 1.58579 17.5858 1.25 18 1.25H22C22.3034 1.25 22.5768 1.43273 22.6929 1.71299C22.809 1.99324 22.7449 2.31583 22.5304 2.53033L19.8107 5.25H22C22.4142 5.25 22.75 5.58579 22.75 6C22.75 6.41421 22.4142 6.75 22 6.75H18C17.6967 6.75 17.4232 6.56727 17.3071 6.28701C17.191 6.00676 17.2552 5.68417 17.4697 5.46967L20.1894 2.75H18ZM13.5 8.75C13.0858 8.75 12.75 8.41421 12.75 8C12.75 7.58579 13.0858 7.25 13.5 7.25H16.5C16.8034 7.25 17.0768 7.43273 17.1929 7.71299C17.309 7.99324 17.2449 8.31583 17.0304 8.53033L15.3107 10.25H16.5C16.9142 10.25 17.25 10.5858 17.25 11C17.25 11.4142 16.9142 11.75 16.5 11.75H13.5C13.1967 11.75 12.9232 11.5673 12.8071 11.287C12.691 11.0068 12.7552 10.6842 12.9697 10.4697L14.6894 8.75H13.5Z" fill="#1C274C"/>
+<path d="M12 22C17.5228 22 22 17.5228 22 12C22 11.5373 21.3065 11.4608 21.0672 11.8568C19.9289 13.7406 17.8615 15 15.5 15C11.9101 15 9 12.0899 9 8.5C9 6.13845 10.2594 4.07105 12.1432 2.93276C12.5392 2.69347 12.4627 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="#1C274C"/>
+</svg>
+      </a>
+    </nav>
+    
+  </header>
+  
+  <div class="main" id="home">
+    <div class="container horizontal-layout">
+      
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <h1>Car Price Prediction</h1>
+        <p>Get the best estimate for your used car in seconds.</p>
+        <button id="predictBtn">Predict Car Price</button>
+
+        <div id="result" class="prediction-result"></div>
+
+      </div>
+
+              <!-- Embedded Form -->
+              <div class="right-form" id="formPanel">
+                <h2>Enter Car Details</h2>
+                <form id="predictionForm">
+                  <label for="brand">Brand:</label>
+                  <select id="brand" name="brand">
+                    <option>Maruti Suzuki</option>
+                    <option>Hyundai</option>
+                    <option>Honda</option>
+                    <option>Toyota</option>
+                  </select>
+      
+                  <label for="year">Year:</label>
+                  <input type="number" id="year" name="year" placeholder="e.g., 2015" />
+      
+                  <label for="km_driven">Kilometers Driven:</label>
+                  <input type="number" id="km_driven" name="km_driven" placeholder="e.g., 45000" />
+      
+                  <label for="fuel">Fuel Type:</label>
+                  <select id="fuel" name="fuel">
+                    <option>Petrol</option>
+                    <option>Diesel</option>
+                    <option>LPG</option>
+                  </select>
+      
+                  <button type="submit">Submit</button>
+                </form>
+      
+              </div>
+
+      <!-- Car Image Slider -->
+      <div class="hero-slider">
+        <img src="{{ url_for('static', filename='images/car1.jpg') }}" alt="Car 1" class="slide active">
+        <img src="{{ url_for('static', filename='images/car2.jpg') }}" alt="Car 2" class="slide">
+        <img src="{{ url_for('static', filename='images/car3.jpg') }}" alt="Car 3" class="slide">
+      </div>
+
+    </div>
+  </div>
+
+  <!-- About Section -->
+<section id="about" class="info-section">
+  <h2>About This Web App</h2>
+  <p>
+    This car price prediction web application uses a machine learning model trained on real-world data to provide accurate estimates of used car prices. It's designed to help users quickly understand how much their car is worth in today’s market — just by filling out a few key details.
+    <br><br>
+    One of the biggest factors that affects a car’s resale price is the **year of manufacture**. Generally, newer cars tend to fetch a higher price, as they’re likely to have fewer issues, better features, and are still under manufacturer warranties. On the other hand, older cars usually experience more depreciation, which lowers their market value.
+    <br><br>
+    Another important factor is the **number of kilometers driven**. A car that has been driven less is usually considered to be in better condition and has more life left in it — which means it's more valuable. High mileage often suggests more wear and tear, and potential maintenance costs, which can bring the price down.
+    <br><br>
+    Our model also considers other features like **brand popularity** and **fuel type**, allowing us to give you a more accurate and fair price estimate. Just enter your car details, and let our system take care of the calculations!
+  </p>
+  
+</section>
+
+
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
